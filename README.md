@@ -3,7 +3,11 @@
 Üdvözlünk a **Course Planner** projektben, ahol könnyedén felveheted a tantárgyaidat, és szabadon összeállíthatod az egyedi órarendedet! Ez az alkalmazás megkönnyíti a tanulmányi időbeosztásod tervezését, hogy mindig tudd, melyik napon mit kell csinálnod.
 
 ---
+## Link
 
+🔗 [course-planner-delta.vercel.app](https://course-planner-delta.vercel.app/)
+
+---
 ## Funkciók
 
 - **Tantárgyak felvétele:** Egyszerűen add hozzá a tanóráidat, válaszd ki a napot és az időpontot!
@@ -24,10 +28,10 @@
 
 ## Képek
 
-![Órarend adatbekérő menü]("./public/órarend-tervező-adatbekérés.png")
+![Órarend adatbekérő menü](./public/órarend-tervező-adatbekérés.png)
 *Az óra rend tervező adatbekérő menü ablaka*
 
-![Órarend főoldal]("./public/órarend-tervező-főoldal.png")
+![Órarend főoldal](./public/órarend-tervező-főoldal.png)
 *Az óra rend tervező főoldala, ahol könnyedén létrehozhatod az órarended.*
 
 ---
