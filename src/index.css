@@ -1,0 +1,107 @@
+.blur_div{
+   filter: blur(5px);
+  
+}
+/* adat bekérés rész */
+/* .adatbekeres{
+   background: linear-gradient(120deg,#2e4b7a,#C3E0E5);
+} */
+
+.hiányzó_adat{
+   border: 1px solid red;
+   
+   /* animation-name: animacio; */
+   animation-duration: .5s;
+   animation-timing-function: ease-in-out;
+   animation-direction: normal;
+   
+   transition: ease-in-out .1s;
+}
+@keyframes animacio{
+   0%{
+      transform: translateX(00px);
+   }
+   50%{
+      transform: translateX(10px);
+   }
+   100%{
+      transform: translateX(0px);
+   }
+}
+
+.orarend-container {
+  width: 100vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.orarend-body {
+  width: 100vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  body, html {
+    font-size: 90%;
+  }
+  .blur_div, .orarend-container, .fejlec, .kartyak-container {
+    width: 98vw !important;
+    min-width: 0 !important;
+  }
+  .orarend-container {
+    width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .orarend-body {
+    width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  button, input, select {
+    font-size: 1em !important;
+    padding: 0.7em 1em !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body, html {
+    font-size: 80%;
+  }
+  .blur_div, .orarend-container, .fejlec, .kartyak-container {
+    width: 100vw !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+  .orarend-container {
+    width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .orarend-body {
+    width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  button, input, select {
+    font-size: 0.95em !important;
+    padding: 0.5em 0.7em !important;
+  }
+  .fejlec > div {
+    font-size: clamp(0.7rem, 3vw, 1.1rem) !important;
+    padding: 0.5em 0.2em !important;
+  }
+  .kartyak-container > div {
+    min-width: 120px !important;
+    max-width: 180px !important;
+  }
+}
