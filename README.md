@@ -24,10 +24,10 @@
 
 ## Képek
 
-![Órarend adatbekérő menü]("C:\Users\klida\Pictures\tantárgy tervező naptár design.png")
+![Órarend adatbekérő menü]("./public/órarend-tervező-adatbekérés.png")
 *Az óra rend tervező adatbekérő menü ablaka*
 
-![Órarend főoldal]("C:\Users\klida\Pictures\órarend-tervező-főoldal.png")
+![Órarend főoldal]("./public/órarend-tervező-főoldal.png")
 *Az óra rend tervező főoldala, ahol könnyedén létrehozhatod az órarended.*
 
 ---
