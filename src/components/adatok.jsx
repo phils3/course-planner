@@ -50,7 +50,7 @@ function Adatok(){
     }
 
      return(
-        <Tárgyak_listaja.Provider value={{minden_targy,hetfo,SetHetfo,kedd,SetKedd,szerda,SetSzerda,csutortok,SetCsutortok,pentek,SetPentek,id,SetId,szín,SetSzín, torlesOsszesOra}}>
+        <Tárgyak_listaja.Provider value={{minden_targy,hetfo,SetHetfo,kedd,SetKedd,szerda,SetSzerda,csutortok,SetCsutortok,pentek,SetPentek,id,SetId,szín,SetSzín, torlesOsszesOra, handleSubjectDelete: null}}>
              
             <Content/>
         </Tárgyak_listaja.Provider>

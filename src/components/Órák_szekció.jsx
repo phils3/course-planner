@@ -1,4 +1,8 @@
+import { useContext } from 'react';
+import { Beallitasok } from '../contexts/setup';
+
 function Órák_szekció({kezd_ora,vég_ora,órák_háttér,szám_szín,bottom_border_szín}) {
+    const { oszlopSzelesseg, orarendHeight } = useContext(Beallitasok);
 
     let órák_száma = (vég_ora-kezd_ora)+1
     let órák_tömb=[]
@@ -8,7 +12,7 @@ function Órák_szekció({kezd_ora,vég_ora,órák_háttér,szám_szín,bottom_b
     }
     
     return ( 
-        <div style={{width:"11.4vw",display:"flex",flexDirection:"column"}}>
+        <div style={{width:`${oszlopSzelesseg}vw`,display:"flex",flexDirection:"column"}}>
             {
                 órák_tömb.map((óra,index)=>
                     <div key={óra} style={{
@@ -17,7 +21,7 @@ function Órák_szekció({kezd_ora,vég_ora,órák_háttér,szám_szín,bottom_b
                         color: "#2cc295",
                         borderBottom: index === órák_tömb.length - 1 ? "none" : `1px solid ${bottom_border_szín}`,
                         borderRight: "1px solid "+bottom_border_szín,
-                        height: `${80/órák_száma}vh`,
+                        height: `${orarendHeight/órák_száma}vh`,
                         textAlign: "center",
                         display: "flex",
                         justifyContent: "center",
@@ -25,7 +29,8 @@ function Órák_szekció({kezd_ora,vég_ora,órák_háttér,szám_szín,bottom_b
                         fontFamily: "sans-serif",
                         borderBottomLeftRadius: index===órák_tömb.length - 1 ?"12px":"none",
                         boxSizing: "border-box",
-                        width:"11.4vw"
+                        width:`${oszlopSzelesseg}vw`,
+
                     }}>{óra}:00</div>
                 )
             }  

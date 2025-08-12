@@ -2,8 +2,8 @@ import Óra_kártya from "./óra_kártya"
 import { useContext,useEffect, useState } from "react";
 import { Beallitasok } from "../contexts/setup"
 import {Tárgyak_listaja} from "./adatok";
-function Napi_órarend({color, targyak_listaja,utolso=false}) {
-    let órák_száma=12 //use context használata majd a setup fájlból
+function Napi_órarend({color, targyak_listaja,utolso=false, nap, onSubjectDelete}) {
+    let órák_száma=12 //8:00-19:00 = 12 óra
     //console.log("napi orarend komponens: ", targyak_listaja[0])
     //1perc=0.111vh
     const [kártyaSzínek, setKártyaSzínek] = useState([]);
@@ -13,6 +13,8 @@ function Napi_órarend({color, targyak_listaja,utolso=false}) {
     const {SetBackground}=useContext(Beallitasok)
     const {randomSzín}=useContext(Beallitasok)
     const {SetRandomSzín}=useContext(Beallitasok)
+    const {oszlopSzelesseg, orarendHeight}=useContext(Beallitasok)
+    const egyOramagassag = orarendHeight / órák_száma // Ugyanaz mint az órák szekcióban
     const {szín}=useContext(Tárgyak_listaja)
 
 
@@ -72,17 +74,16 @@ function Napi_órarend({color, targyak_listaja,utolso=false}) {
         return start1 < end2 && start2 < end1;
     }
 
-    // Az oszlop teljes szélessége vw-ben
-    const oszlopSzelesseg = 11.4; // 13.4vw minden nap oszlopra
+    // Az oszlop teljes szélessége vw-ben a setup context-ből
 
     // Kiszámoljuk, mely órák ütköznek
     let positions = Array(targyak_listaja.length).fill(0);
-    let widths = Array(targyak_listaja.length).fill(`${oszlopSzelesseg}vw`);
+    let widths = Array(targyak_listaja.length).fill(`calc(${oszlopSzelesseg}vw - 12px)`);
     for (let i = 0; i < targyak_listaja.length; i++) {
         for (let j = i + 1; j < targyak_listaja.length; j++) {
             if (orakUtköznek(targyak_listaja[i], targyak_listaja[j])) {
-                widths[i] = `calc(${oszlopSzelesseg/2}vw - 10px)`;
-                widths[j] = `calc(${oszlopSzelesseg/2}vw - 10px)`;
+                widths[i] = `calc(${oszlopSzelesseg/2}vw - 9px)`;
+                widths[j] = `calc(${oszlopSzelesseg/2}vw - 9px)`;
                 positions[j] = 1; // a második ütköző jobbra kerül
             }
         }
@@ -91,7 +92,7 @@ function Napi_órarend({color, targyak_listaja,utolso=false}) {
     
     return ( 
         <div style={{
-            height: `${80}vh`,
+            height: `${orarendHeight}vh`,
             width: `${oszlopSzelesseg}vw`,
             background: "#242424",
             position: "relative",
@@ -100,17 +101,9 @@ function Napi_órarend({color, targyak_listaja,utolso=false}) {
             boxSizing: "border-box"
         }}>
            {/*  <hr style={{marginTop:`${marginTop}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr> */}
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
-            <hr style={{marginTop:`${marginTop*60}vh`, borderTop:"1px dashed #9B9797 ",borderBottom:"none",borderRight:"none"}}></hr>
+            {Array.from({length: órák_száma - 1}, (_, i) => (
+                <hr key={i} style={{position:"absolute",top:`${(i + 1) * egyOramagassag}vh`,left:0,right:0,margin:0,borderTop:"1px dashed #9B9797",borderBottom:"none",borderRight:"none",borderLeft:"none"}}></hr>
+            ))}
        { targyak_listaja.map((targy,index)=>{
          const isPair = widths[index].includes('calc');
          const isRight = isPair && positions[index] === 1;
@@ -123,10 +116,14 @@ function Napi_órarend({color, targyak_listaja,utolso=false}) {
                 kezdo_perc={targy.ora_kezdes_percben}
                 vege_ora={targy.ora_vege_oraban}
                 vege_perc={targy.ora_vege_percben}
+                kredit={targy.kredit}
                 width={widths[index]}
-                left={isPair ? (isRight ? 'calc(50% + 3px)' : '7px') : undefined}
-                marginLeft={isPair ? (isRight ? '3px' : undefined) : undefined}
-                marginRight={isPair ? (isRight ? '7px' : '3px') : undefined}
+                left={isPair ? (isRight ? `calc(${oszlopSzelesseg/2}vw + 3px)` : '6px') : undefined}
+                marginLeft={undefined}
+                marginRight={undefined}
+                id={targy.id}
+                nap={nap}
+                onSubjectDelete={onSubjectDelete}
             />
         )
     }) 

@@ -7,6 +7,8 @@
    background: linear-gradient(120deg,#2e4b7a,#C3E0E5);
 } */
 
+
+
 .hiányzó_adat{
    border: 1px solid red;
    
@@ -29,6 +31,10 @@
    }
 }
 
+:root {
+  --orarend-width: 80;
+}
+
 .orarend-container {
   width: 100vw;
   margin: 0 auto;
@@ -41,10 +47,134 @@
   box-sizing: border-box;
 }
 
+.kredit-display {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 15px 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.delete-icon {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 0, 0, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.delete-icon:hover {
+  background: rgba(255, 0, 0, 1);
+}
+
+.targynev-input {
+  width: 18vw;
+}
+
+.ora-input {
+  width: 3vw;
+}
+
+.perc-input {
+  width: 3vw;
+}
+
+.kredit-input {
+  width: 7vw;
+}
+
+/* Óra kártya animációk */
+.card-enter {
+  animation: slideInUp 0.4s ease-out;
+  transform-origin: center;
+}
+
+.card-exit {
+  animation: slideOutDown 0.3s ease-in forwards;
+  transform-origin: center;
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.card-tap {
+  transition: transform 0.1s ease;
+}
+
+.card-tap:active {
+  transform: scale(0.98);
+}
+
+.color-bounce {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.color-bounce:hover {
+  transform: scale(1.1);
+}
+
+.color-bounce:active {
+  transform: scale(0.85);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 1;
+    transform: scale(0.65);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+}
+
 @media (max-width: 900px) {
+  :root {
+    --orarend-width: 100;
+  }
   body, html {
     font-size: 90%;
   }
+  .orarend-container {
+    position: absolute !important;
+    bottom: 10vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    height: auto !important;
+    max-height: calc(100vh - 15vh) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+  }
+
   .blur_div, .orarend-container, .fejlec, .kartyak-container {
     width: 98vw !important;
     min-width: 0 !important;
@@ -66,6 +196,77 @@
   button, input, select {
     font-size: 1em !important;
     padding: 0.7em 1em !important;
+  }
+  .targynev-input {
+    width: 30vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 18px !important;
+  }
+  .ora-input {
+    width: 4vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 18px !important;
+  }
+  .perc-input {
+    width: 4vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 18px !important;
+  }
+  .kredit-input {
+    width: 12vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 18px !important;
+  }
+  .orarend-container > div:first-child {
+    position: fixed !important;
+    top: -6vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+  }
+  .orarend-container > div:first-child span {
+    position: absolute !important;
+    top: calc(100% - 50px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-left: 0 !important;
+    white-space: nowrap !important;
+  }
+  .delete-icon {
+    display: none !important;
+  }
+  .mobile-delete-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 8px;
+  }
+  .mobile-delete-text {
+    color: white;
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+  }
+  .mobile-delete-icon {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
   }
 }
 
@@ -104,4 +305,236 @@
     min-width: 120px !important;
     max-width: 180px !important;
   }
+}
+
+@media (max-width: 450px) {
+  :root {
+    --orarend-width: 100;
+  }
+  body, html {
+    font-size: 90%;
+  }
+  .adatbekeres p {
+    font-size: 1rem !important;
+    line-height: 1.2 !important;
+    margin: 15px 0px !important;
+    
+  }
+  .adatbekeres{
+    width: 100vw !important;
+    margin-left: 15px !important;
+    
+  }
+  .adatbekeres button {
+    margin: 35px auto !important;
+    display: block !important;
+    text-align: center !important;
+  }
+  .kredit-display {
+    font-size: 18px !important;
+    padding: 13px !important;
+  }
+  .kredit-display * {
+    font-size: 18px !important;
+  }
+  .orarend-container > div:first-child {
+    position: relative !important;
+  }
+  .orarend-container > div:first-child > div {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+  .orarend-container > div:first-child button:first-child {
+    margin-left: 50px !important;
+  }
+  .orarend-container > div:first-child span {
+    font-size: 14px !important;
+    padding: 12px !important;
+  }
+  .forgoDiv {
+    left: -55vw !important;
+    top: 25vh!important;
+    transform-origin: center !important;
+    animation: spin 5s linear infinite !important;
+    width: 200vw !important;
+  }
+  .forgoDiv::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 10px !important;
+    height: 10px !important;
+    background: red !important;
+    border-radius: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10 !important;
+  }
+  @keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  .orarend-container > div:first-child button {
+    font-size: 18px !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .adatbekeres .kész_gomb {
+    margin: 35px auto auto 35vw !important;
+    padding: 16px !important;
+  }
+  .orarend-container > div:nth-child(2) span {
+    font-size: 14px !important;
+    padding: 16px !important;
+  }
+  .orarend-container > div:nth-child(2) span span {
+    font-size: 16px !important;
+  }
+  .editable-field input[style*="width: 40px"] {
+    width: 8px !important;
+  }
+  .editable-field div[style*="display: flex"][style*="gap: 5px"] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 2px !important;
+  }
+  .time-edit-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 2px !important;
+    width: 100% !important;
+    max-width: 60px !important;
+    margin: -5px auto !important;
+  }
+  .start-time-group, .end-time-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1px !important;
+    border:"1px solid blue"   !important;
+  }
+  .start-hour-input, .start-min-input, .end-hour-input, .end-min-input {
+    width: 12px !important;
+    padding: 1px !important;
+    text-align: center !important;
+    font-size: 0.8rem !important;
+  }
+  .orarend-container {
+    position: absolute !important;
+    bottom: 10vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    height: auto !important;
+    max-height: calc(100vh - 15vh) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+  }
+
+  .blur_div, .orarend-container, .fejlec, .kartyak-container {
+    width: 98vw !important;
+    min-width: 0 !important;
+  }
+  .orarend-container {
+    width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .orarend-body {
+    width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  button, input, select {
+    font-size: 1em !important;
+    padding: 0.7em 1em !important;
+  }
+  .targynev-input {
+    width: 35vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 14px !important;
+  }
+  .ora-input {
+    width: 4vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 14px !important;
+  }
+  .perc-input {
+    width: 4vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 14px !important;
+  }
+  .kredit-input {
+    width: 14vw !important;
+    padding: 8px 8px 8px 8px !important;
+    font-size: 14px !important;
+  }
+  .orarend-container > div:first-child {
+    position: fixed !important;
+    top: -6vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+  }
+  .orarend-container > div:first-child span {
+    position: absolute !important;
+    top: calc(100% - 50px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-left: 0 !important;
+    white-space: nowrap !important;
+  }
+  .delete-icon {
+    display: none !important;
+  }
+  .mobile-delete-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 8px;
+  }
+  .mobile-delete-text {
+    color: white;
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+  }
+  .mobile-delete-icon {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+.validation-error {
+  border: 2px solid red !important;
+  animation: errorBorder 3s ease-out;
+}
+
+@keyframes errorBorder {
+  0% { border-color: red; }
+  100% { border-color: red; }
 }

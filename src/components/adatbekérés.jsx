@@ -1,12 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import "../index.css"
+import "../hideNumberInputArrows.css"
 import {Tárgyak_listaja} from "./adatok";
 
 function szamtostring(szam){
     return szam.toString().length
 }
 
-function Adatbekérés() {
+function Adatbekérés({onClose}) {
     
     const [targynev,SetTargynev]=useState("")
     const [nap,SetNap]=useState("hétfő")
@@ -16,6 +17,7 @@ function Adatbekérés() {
     const [vége2,SetVége2]=useState(null)
     const [on,SetOn]=useState(true) //auto szín kiválasztása gomb, alapból true
     const [gombnyomas,SetGombnyomas]=useState(false)
+    const [kredit,SetKredit]=useState(null)
     //context rész importálása az adatok fájlból
     const {hetfo}=useContext(Tárgyak_listaja)
     const {SetHetfo}=useContext(Tárgyak_listaja)
@@ -42,12 +44,71 @@ function Adatbekérés() {
             SetSzín(színek[randomIndex]);
         }
     }, [on, gombnyomas]);
+    
+    // Enter gomb kezelése
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter') {
+                handleSubmit();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [targynev, kezdes1, kezdes2, vége1, vége2, kredit, nap, szín, hetfo, kedd, szerda, csutortok, pentek, id]);
+    
       // Szín kiválasztásának kezelése
     const handleColorChange = (color) => {
         if (!on) {
             SetSzín(color);
         }
         //console.log("kiválasztott szín: ",szín)
+    };
+    
+    const handleSubmit = () => {
+        if(targynev!==""&& kezdes1!=="" && kezdes1!==null && kezdes2!=="" && kezdes2!==null && vége1!=="" && vége1!==null && vége2!=="" && vége2!==null){
+            const kreditValue = kredit && kredit !== "" ? parseInt(kredit) : 0;
+            const newSubject = {
+                id:id,
+                targynev:targynev,
+                nap:nap,
+                ora_kezdes_oraban:parseInt(kezdes1),
+                ora_kezdes_percben:parseInt(kezdes2),
+                ora_vege_oraban:parseInt(vége1),
+                ora_vege_percben:parseInt(vége2),
+                auto_szin_valasztas_IsOn:true,
+                szin: szín,
+                kredit: kreditValue
+            };
+            
+            if(nap==="hétfő") SetHetfo([...hetfo, newSubject]);
+            if(nap==="kedd") SetKedd([...kedd, newSubject]);
+            if(nap==="szerda") SetSzerda([...szerda, newSubject]);
+            if(nap==="csütörtök") SetCsutortok([...csutortok, newSubject]);
+            if(nap==="péntek") SetPentek([...pentek, newSubject]);
+            
+            SetId(id+1);
+            SetTargynev("");
+            SetKezdes1(null);
+            SetNap("hétfő");
+            SetKezdes2(null);
+            Setvége1(null);
+            SetVége2(null);
+            SetKredit(null);
+            SetGombnyomas(!gombnyomas);
+            onClose();
+        } else {
+            const inputs = document.querySelectorAll('.targynev-input, .ora-input, .perc-input');
+            inputs.forEach(input => {
+                if (input.value === '' || input.value === null) {
+                    input.classList.add('validation-error');
+                    setTimeout(() => {
+                        input.classList.remove('validation-error');
+                    }, 3000);
+                }
+            });
+        }
     };
     let targy={
         id:0,
@@ -60,24 +121,32 @@ function Adatbekérés() {
         auto_szin_valasztas_IsOn:true
     }    
       
-    const gradientBackground = "linear-gradient(45deg, #363636  20%,  #17876E 100%)";    
+    
     return ( 
         <>
-        
-        <div style={{height:"59vh",width:"35vw",position:"absolute",top:"20vh",left:"23vw",display:"block",borderRadius:"8px", color:"black",fontWeight:"bolder",background:gradientBackground, boxShadow: "inset 0 4px 5px rgba(255, 255, 255, 0.6), inset 5px -6px 6px rgba(0, 0, 0, 0.5)"}} >
+        <div style={{position:"fixed",top:window.innerWidth <= 900 ? "auto" : "50%",left:"50%",bottom:window.innerWidth <= 900 ? "3vh" : "auto",transform:window.innerWidth <= 900 ? "translateX(-50%)" : "translate(-50%, -50%)",width:window.innerWidth <= 450 ? "calc(95vw + 4px)" : window.innerWidth <= 900 ? "calc(60vw + 4px)" : "calc(35vw + 4px)",height:window.innerWidth <= 900 ? "calc(70vh + 4px)" : "calc(49vh + 4px)",borderRadius:"11px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",background:"#585858", zIndex:3}}>
+        <div className="forgoDiv" style={{position:"absolute",width:"80vw",height:"20vh",background:"linear-gradient(to bottom,#00DF82,#585858 )",top:"15vh",left:"-22vw",transform:"translate(-50%, -50%)",animation:"spin 5s linear infinite",transformOrigin:"50% 50%",zIndex:1}}></div>
+        <style>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+        <div style={{height:window.innerWidth <= 900 ? "70vh" : "49vh",width:window.innerWidth <= 450 ? "95vw" : window.innerWidth <= 900 ? "60vw" : "35vw",display:"block",borderRadius:"8px", color:"black",fontWeight:"bolder",background:"#1F1F1F",position:"relative",zIndex:2,margin:"1px"}} >
+            <button style={{position:"absolute",top:"10px",right:"10px",background:"#ff4444",color:window.innerWidth <= 900 ? "#555555" : "white",border:"none",borderRadius:"50%",width:"30px",height:"30px",cursor:"pointer",fontSize:window.innerWidth <= 900 ? "20px" : "16px",fontWeight:window.innerWidth <= 900 ? "bolder" : "bold",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>×</button>
             <p style={{textAlign:"center",fontSize:"28px",color:"white",fontFamily:"monospace"}}>Adatbekérés</p>
-            <div style={{marginLeft:"12px"}}>
-                <p style={{fontFamily:"monospace",fontSize:"20px" ,color:"white"}}>tárgynév</p>
+            <div className="adatbekeres" style={{marginLeft:"12px"}}>
+                <p style={{fontFamily:"monospace",fontSize:"20px" ,color:"white"}}>tárgynév*</p>
                 <input 
                 value={targynev===null?"":targynev}
                 onChange={(e)=>SetTargynev(e.target.value)}
                 placeholder="programozás"
-                style={{border:`${targynev===""&&gombnyomas?"1px solid red":"none"}`,fontSize:"20px",padding:"4px",borderRadius:"3px",background:"#242424",color:"#2CC295",fontFamily:"sans-serif"}}
-                className={`${targynev===""&&gombnyomas?"hiányzó_adat":""}`}
+                style={{border:`${targynev===""&&gombnyomas?"1px solid red":"1px solid #928787"}`,fontSize:"20px",padding:"4px",borderRadius:"3px",background:"#242424",color:"#2CC295",fontFamily:"sans-serif"}}
+                className={`targynev-input ${targynev===""&&gombnyomas?"hiányzó_adat":""}`}
                 ></input>
-                <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>nap</p>
+                <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>nap*</p>
                 <select 
-                style={{fontSize:"20px",border:"none",borderRadius:"3px",padding:"4px",background:"#242424",color:"#2CC295",cursor:"pointer"}}
+                style={{fontSize:"20px",borderRadius:"3px",padding:"4px",background:"#242424",color:"#2CC295",cursor:"pointer",border:"1px solid #928787"}}
                 value={nap}
                 onChange={(e)=>SetNap(e.target.value)}>
                     <option >hétfő</option>
@@ -88,53 +157,77 @@ function Adatbekérés() {
                 </select>
                 <div style={{display:"flex"}}>
                     <div style={{marginRight:"40px"}}>
-                        <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>kezdés</p>
-                        <span style={{fontSize:"20px",fontWeight:"bolder",background:"#242424",height:"33px",display:"flex",justifyContent:"center",alignItems:"center",borderRadius:"3px"}}>
+                        <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>kezdés*</p>
+                        <span style={{fontSize:"20px",fontWeight:"bolder",background:"#242424",height:"33px",display:"flex",justifyContent:"center",alignItems:"center",borderRadius:"3px",color:"white"}}>
                             <input 
                             value={kezdes1===null?"":kezdes1}
-                            onChange={(e)=>SetKezdes1(e.target.value)}
+                            onChange={(e)=>{
+                                const val = parseInt(e.target.value)
+                                if(e.target.value === "" || (e.target.value.length <= 2 && (val >= 8 && val <= 19 || e.target.value === "1"))) {
+                                    SetKezdes1(e.target.value)
+                                }
+                            }}
                             type="number"
                             min={8}
-                            max={20}
+                            max={19}
+                            maxLength={2}
                             placeholder="8"
-                            style={{width:"40px",fontSize:"20px",padding:"4px 0px 4px 10px",border:`${targynev===""&&gombnyomas?"1px solid red":"none"}` ,borderRadius:"3px",background:"#242424",color:"#2CC295",fontFamily:"sans-serif"}} className={`${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
+                            style={{fontSize:"20px",padding:"4px 0px 4px 10px",border:`${targynev===""&&gombnyomas?"1px solid red":"1px solid #928787"}` ,borderRadius:"3px",background:"#242424",color:"#2CC295",fontFamily:"sans-serif"}} className={`ora-input ${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
                             
                             </input>
                             :
                             <input  
                                 value={kezdes2===null?"":kezdes2}
-                                onChange={(e)=>SetKezdes2(e.target.value)}
+                                onChange={(e)=>{
+                                    const val = parseInt(e.target.value)
+                                    if(e.target.value === "" || (e.target.value.length <= 2 && val >= 0 && val <= 59)) {
+                                        SetKezdes2(e.target.value)
+                                    }
+                                }}
                                 type="number"
-                                min={8}
-                                max={20}
+                                min={0}
+                                max={59}
+                                maxLength={2}
                                 placeholder="00"
-                                style={{width:"40px",fontSize:"20px",padding:"4px 0px 4px 10px",background:"#242424",border:`${targynev===""&&gombnyomas?"1px solid red":"none"}` ,borderRadius:"3px",color:"#2CC295",fontFamily:"sans-serif"}} className={`${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
+                                style={{fontSize:"20px",padding:"4px 0px 4px 10px",background:"#242424",border:`${targynev===""&&gombnyomas?"1px solid red":"1px solid #928787"}` ,borderRadius:"3px",color:"#2CC295",fontFamily:"sans-serif"}} className={`perc-input ${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
 
                             </input>
                         </span>
                     </div>
                     <div>
-                        <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>vége</p>
-                        <span style={{fontSize:"20px",fontWeight:"bolder",background:"#242424",height:"33px",display:"flex",justifyContent:"center",alignItems:"center",borderRadius:"3px"}}>
+                        <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>vége*</p>
+                        <span style={{fontSize:"20px",fontWeight:"bolder",background:"#242424",height:"33px",display:"flex",justifyContent:"center",alignItems:"center",borderRadius:"3px",color:"white"}}>
                             <input 
                             value={vége1===null?"":vége1}
-                            onChange={(e)=>Setvége1(e.target.value)}
+                            onChange={(e)=>{
+                                const val = parseInt(e.target.value)
+                                if(e.target.value === "" || (e.target.value.length <= 2 && (val >= 8 && val <= 19 || e.target.value === "1"))) {
+                                    Setvége1(e.target.value)
+                                }
+                            }}
                             type="number"
                             min={8}
-                            max={20}
+                            max={19}
+                            maxLength={2}
                             placeholder="10"
-                            style={{width:"40px",fontSize:"20px",padding:"4px 0px 4px 10px",background:"#242424",border:`${targynev===""&&gombnyomas?"1px solid red":"none"}` ,borderRadius:"3px",color:"#2CC295",fontFamily:"sans-serif"}} className={`${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
+                            style={{fontSize:"20px",padding:"4px 0px 4px 10px",background:"#242424",border:`${targynev===""&&gombnyomas?"1px solid red":"1px solid #928787"}` ,borderRadius:"3px",color:"#2CC295",fontFamily:"sans-serif"}} className={`ora-input ${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
 
                             </input>
                             :
                             <input  
                                 value={vége2===null?"":vége2}
-                                onChange={(e)=>SetVége2(e.target.value)}
+                                onChange={(e)=>{
+                                    const val = parseInt(e.target.value)
+                                    if(e.target.value === "" || (e.target.value.length <= 2 && val >= 0 && val <= 59)) {
+                                        SetVége2(e.target.value)
+                                    }
+                                }}
                                 type="number"
-                                min={8}
-                                max={20}
+                                min={0}
+                                max={59}
+                                maxLength={2}
                                 placeholder="00"
-                                style={{width:"40px",fontSize:"20px",padding:"4px 0px 4px 10px",background:"#242424",border:`${targynev===""&&gombnyomas?"1px solid red":"none"}` ,borderRadius:"3px",color:"#2CC295",fontFamily:"sans-serif"}} className={`${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
+                                style={{fontSize:"20px",padding:"4px 0px 4px 10px",background:"#242424",border:`${targynev===""&&gombnyomas?"1px solid red":"1px solid #928787"}` ,borderRadius:"3px",color:"#2CC295",fontFamily:"sans-serif"}} className={`perc-input ${targynev===""&&gombnyomas?"hiányzó_adat":""}`}>
 
                             </input>
                         </span>
@@ -143,6 +236,16 @@ function Adatbekérés() {
                     
                 </div>
                 
+                <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>kredit szám</p>
+                <input 
+                value={kredit===null?"":kredit}
+                onChange={(e)=>SetKredit(e.target.value)}
+                type="number"
+                min={1}
+                placeholder="3"
+                style={{border:`${kredit===""&&gombnyomas?"1px solid red":"1px solid #928787"}`,fontSize:"20px",padding:"4px",borderRadius:"3px",background:"#242424",color:"#2CC295",fontFamily:"sans-serif",marginBottom:"15px"}}
+                className={`kredit-input ${kredit===""&&gombnyomas?"hiányzó_adat":""}`}
+                ></input>
                 <div style={{display:"flex",alignItems:"center",cursor:"pointer",marginBottom:"15px"}} onClick={()=>SetOn(!on)}>
                     <p style={{fontFamily:"monospace",fontSize:"20px",color:"white"}}>auto szín választás</p>
                     <div style={{width:"65px",height:"28px",background:"#565A57",marginLeft:"25px",borderRadius:"40px",display:"flex",alignItems:"center",boxShadow:"inset 2px 2px 0px 0px #3A3A3A"}}>
@@ -157,150 +260,35 @@ function Adatbekérés() {
                             handleColorChange(szin) // Szín kiválasztása
                             
                         }
-                       
+                        className="color-bounce"
                         style={{
                           width: '20px',
                           height: '20px',
                           backgroundColor:on?"#777171": színek[index],
                           borderRadius: '50%',
-                          border: színek[index] === szín ? '3px solid #000' : 'none',  // Ha ki van választva, keret
+                          border: (!on && színek[index] === szín) ? '3px solid #00DF82' : 'none',
+                          transform: (!on && színek[index] === szín) ? 'scale(1.5)' : 'scale(1)',
                           cursor: 'pointer',
                           marginLeft:"10px",
-                          pointerEvents: on ? 'none' : 'auto' 
+                          pointerEvents: on ? 'none' : 'auto',
+                          transition: 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), border 0.2s ease'
                         }}
                       ></div>
                         ))
                     }
                     
-                    {/* <span style={{borderRadius:"50%",width:"20px",height:"20px",background:"#FE7C7C",cursor:"pointer"}}></span>
-                    <span style={{borderRadius:"50%",width:"20px",height:"20px",background:"#76F0DA",cursor:"pointer",marginLeft:"8px"}}></span>
-                    <span style={{borderRadius:"50%",width:"20px",height:"20px",background:"#E5BD81",cursor:"pointer",marginLeft:"8px"}}></span>
-                    <span style={{borderRadius:"50%",width:"20px",height:"20px",background:"#3CC4FF",cursor:"pointer",marginLeft:"8px"}}></span>
-                    <span style={{borderRadius:"50%",width:"20px",height:"20px",background:"#3BB900",cursor:"pointer",marginLeft:"8px"}}></span>
-                    <span style={{borderRadius:"50%",width:"20px",height:"20px",background:"#F470E7",cursor:"pointer",marginLeft:"8px"}}></span> */}
+                  
 
                    
                 
                     
                 </div>
-               <button style={{padding:"15px",fontSize:"20px",margin:"35px auto auto auto",border:"none",cursor:"pointer",borderRadius:"4px",display:"block",background:"#17876E",color:"white",fontFamily:"sans-serif",fontWeight:"bold",boxShadow: "inset 0 1px 5px rgba(255, 255, 255, 0.6), inset 1px -2px 6px rgba(0, 0, 0, 0.6)"}} onClick={()=>
-               {
-                
-                
-                //megvizsgálás nem e üresek az adatmezők
-               /*  SetHetfo([...hetfo,
-                    {
-                        id:id,
-                        targynev:targynev,
-                        nap:nap,
-                        ora_kezdes_oraban:kezdes1,
-                        ora_kezdes_percben:kezdes2,
-                        ora_vege_oraban:vége1,
-                        ora_vege_percben:vége2,
-                        auto_szin_valasztas_IsOn:true
-                        }    
-                ])
-                SetId(id+1) */
-                //targynev!==""&& szamtostring(kezdes1)===0 && szamtostring(kezdes2)===0 && szamtostring(vége1)===0 && szamtostring(vége2)===0
-                if(targynev!==""&& kezdes1!==null && kezdes2!==null && vége1!==null && vége2!==null){
-                    if(nap==="hétfő"){
-                        SetHetfo([...hetfo,
-                            {
-                                id:id,
-                                targynev:targynev,
-                                nap:nap,
-                                ora_kezdes_oraban:kezdes1,
-                                ora_kezdes_percben:kezdes2,
-                                ora_vege_oraban:vége1,
-                                ora_vege_percben:vége2,
-                                auto_szin_valasztas_IsOn:true,
-                                szin: szín
-                                }    
-                        ])
-                        SetId(id+1)
-                    }
-                    if(nap==="kedd"){
-                        SetKedd([...kedd,
-                            {
-                                id:id,
-                                targynev:targynev,
-                                nap:nap,
-                                ora_kezdes_oraban:kezdes1,
-                                ora_kezdes_percben:kezdes2,
-                                ora_vege_oraban:vége1,
-                                ora_vege_percben:vége2,
-                                auto_szin_valasztas_IsOn:true,
-                                szin: szín
-                        }])
-                        SetId(id+1)
-                    }
-                    if(nap==="szerda"){
-                        SetSzerda([...szerda,
-                            {
-                                id:id,
-                                targynev:targynev,
-                                nap:nap,
-                                ora_kezdes_oraban:kezdes1,
-                                ora_kezdes_percben:kezdes2,
-                                ora_vege_oraban:vége1,
-                                ora_vege_percben:vége2,
-                                auto_szin_valasztas_IsOn:true,
-                                szin: szín
-                        }])
-                        SetId(id+1)
-                    }
-                    if(nap==="csütörtök"){
-                        SetCsutortok([...csutortok,
-                            {
-                                id:id,
-                                targynev:targynev,
-                                nap:nap,
-                                ora_kezdes_oraban:kezdes1,
-                                ora_kezdes_percben:kezdes2,
-                                ora_vege_oraban:vége1,
-                                ora_vege_percben:vége2,
-                                auto_szin_valasztas_IsOn:true,
-                                szin: szín
-                        }])
-                        SetId(id+1)
-                    }
-                    if(nap==="péntek"){
-                        SetPentek([...pentek,
-                            {
-                                id:id,
-                                targynev:targynev,
-                                nap:nap,
-                                ora_kezdes_oraban:kezdes1,
-                                ora_kezdes_percben:kezdes2,
-                                ora_vege_oraban:vége1,
-                                ora_vege_percben:vége2,
-                                auto_szin_valasztas_IsOn:true,
-                                szin: szín
-                        }])
-                        SetId(id+1)
-                    }
-
-                } 
-                
-                
-                console.log("hetfo: ",hetfo)
-                console.log("kedd: ",kedd)
-                console.log("szerda: ",szerda)
-                console.log("csutortok: ",csutortok)
-                console.log("pentek: ",pentek)
-
-                SetTargynev("")
-                SetKezdes1(null)
-                SetNap("hétfő")
-                SetKezdes2(null)
-                Setvége1(null)
-                SetVége2(null)
-                SetGombnyomas(!gombnyomas)
-                }}>Kész</button>
+               <button className="kész_gomb" style={{padding:"15px",fontSize:"20px",margin:"35px auto auto auto",border:"none",cursor:"pointer",borderRadius:"4px",display:"block",background:"#17876E",color:"white",fontFamily:"sans-serif",fontWeight:"bold",boxShadow: "inset 0 1px 5px rgba(255, 255, 255, 0.6), inset 1px -2px 6px rgba(0, 0, 0, 0.6)"}} onClick={handleSubmit}>Kész</button>
                
               
             </div>
             
+        </div>
         </div>
         </>
      );

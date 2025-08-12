@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import Adatok from "../components/adatok";
 
 export const Beallitasok=createContext()
@@ -9,10 +9,43 @@ function Setup(){
     const [hasznalt_színek_background,SetBackground]=useState([])
     const [randomSzín,SetRandomSzín]=useState(null)
     const [órák_száma,SetÓrák_száma]=useState(12)
+    const [mobilOraSzam,SetMobilOraSzam]=useState(10)
     const[legeneralt_orak,SetLegeneralt_Orak]=useState(0)
+    
+    // Órarend méretek
+    const [orarendWidth,SetOrarendWidth]=useState(80)
+    
+    useEffect(() => {
+        const updateWidth = () => {
+            const cssWidth = getComputedStyle(document.documentElement).getPropertyValue('--orarend-width');
+            SetOrarendWidth(parseInt(cssWidth) || 80);
+        };
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, []);
+
+    const [orarendHeight,SetOrarendHeight]=useState(80)
+    
+    useEffect(() => {
+        const updateHeight = () => {
+            if (window.innerWidth <= 900) {
+                SetOrarendHeight(70);
+            } else {
+                SetOrarendHeight(80);
+            }
+        };
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
+    const oszlopSzelesseg = orarendWidth / 6 // 6 oszlop (órák + 5 nap)
+    const fejlecWidth = orarendWidth
+    const gombSzelesseg = "clamp(15vw, 25vw, 35vw)" // Új óra és törlés gombok szélessége
+    const gombMagassag = "clamp(2vh, 3vh, 10vh)" // Új óra és törlés gombok magassága
     //const fontfamily=
     return(
-        <Beallitasok.Provider value={{színek,hasznalt_színek_background,SetBackground,randomSzín,SetRandomSzín,legeneralt_orak,SetLegeneralt_Orak}}>
+        <Beallitasok.Provider value={{színek,hasznalt_színek_background,SetBackground,randomSzín,SetRandomSzín,legeneralt_orak,SetLegeneralt_Orak,orarendWidth,orarendHeight,oszlopSzelesseg,fejlecWidth,gombSzelesseg,gombMagassag,mobilOraSzam}}>
             <Adatok/>
         </Beallitasok.Provider>
     )
