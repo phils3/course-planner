@@ -124,7 +124,7 @@ function Adatbekérés({onClose}) {
     
     return ( 
         <>
-        <div style={{position:"fixed",top:window.innerWidth <= 900 ? "auto" : "50%",left:"50%",bottom:window.innerWidth <= 900 ? "3vh" : "auto",transform:window.innerWidth <= 900 ? "translateX(-50%)" : "translate(-50%, -50%)",width:window.innerWidth <= 450 ? "calc(95vw + 4px)" : window.innerWidth <= 900 ? "calc(60vw + 4px)" : "calc(35vw + 4px)",height:window.innerWidth <= 900 ? "calc(70vh + 4px)" : "calc(49vh + 4px)",borderRadius:"11px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",background:"#585858", zIndex:3}}>
+        <div style={{position:"fixed",top:window.innerWidth <= 900 ? "auto" : "50%",left:"50%",bottom:window.innerWidth <= 900 ? "3vh" : "auto",transform:window.innerWidth <= 900 ? "translateX(-50%)" : "translate(-50%, -50%)",width:window.innerWidth <= 450 ? "calc(95vw + 4px)" : window.innerWidth <= 900 ? "calc(60vw + 4px)" : "calc(35vw + 4px)",height:window.innerWidth <= 900 ? "calc(min(70vh, 90vh) + 4px)" : "calc(49vh + 4px)",maxHeight:window.innerWidth <= 900 ? "calc(90vh + 4px)" : "none",borderRadius:"11px",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",background:"#585858", zIndex:3}}>
         <div className="forgoDiv" style={{position:"absolute",width:"80vw",height:"20vh",background:"linear-gradient(to bottom,#00DF82,#585858 )",top:"15vh",left:"-22vw",transform:"translate(-50%, -50%)",animation:"spin 5s linear infinite",transformOrigin:"50% 50%",zIndex:1}}></div>
         <style>{`
           @keyframes spin {
@@ -132,7 +132,7 @@ function Adatbekérés({onClose}) {
             to { transform: rotate(360deg); }
           }
         `}</style>
-        <div style={{height:window.innerWidth <= 900 ? "70vh" : "49vh",width:window.innerWidth <= 450 ? "95vw" : window.innerWidth <= 900 ? "60vw" : "35vw",display:"block",borderRadius:"8px", color:"black",fontWeight:"bolder",background:"#1F1F1F",position:"relative",zIndex:2,margin:"1px"}} >
+        <div style={{height:window.innerWidth <= 900 ? "min(70vh, 90vh)" : "49vh",maxHeight:window.innerWidth <= 900 ? "90vh" : "none",width:window.innerWidth <= 450 ? "95vw" : window.innerWidth <= 900 ? "60vw" : "35vw",display:"block",borderRadius:"8px", color:"black",fontWeight:"bolder",background:"#1F1F1F",position:"relative",zIndex:2,margin:"1px",overflowY:window.innerWidth <= 900 ? "scroll" : "visible",overflowX:"hidden"}} >
             <button style={{position:"absolute",top:"10px",right:"10px",background:"#ff4444",color:window.innerWidth <= 900 ? "#555555" : "white",border:"none",borderRadius:"50%",width:"30px",height:"30px",cursor:"pointer",fontSize:window.innerWidth <= 900 ? "20px" : "16px",fontWeight:window.innerWidth <= 900 ? "bolder" : "bold",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>×</button>
             <p style={{textAlign:"center",fontSize:"28px",color:"white",fontFamily:"monospace"}}>Adatbekérés</p>
             <div className="adatbekeres" style={{marginLeft:"12px"}}>
